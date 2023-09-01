@@ -11,7 +11,14 @@
                 <img src="{{ asset('storage/'.$post->cover_image)}}" width="500px">
             </div>
             <div class="col-12">
-                {{ $post->category->name }}
+                <strong>Ctegoria:</strong>
+                @if($post->category)
+                    {{ $post->category->name }}
+                    <br>
+                    <a href="{{route('admin.categories.show', $post->category->id)}}" class="btn btn-sm btn-primary">Visualizza categoria</a>
+                @else
+                    Senza categoria
+                @endif
             </div>
             <div class="col-12">
                 <p>{{ $post->content }}</p>
