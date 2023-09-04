@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Post;
 use App\Models\Category;
+use App\Models\Tag;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use Illuminate\Http\Request;
@@ -20,17 +21,8 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
-        $datas = $request->all();
-
-        if(isset($datas['message'])){
-            $message = $datas['message'];
-        }
-        else{
-            $message = '';
-        }
-
         $posts = Post::all();
-        return view('admin.posts.index', compact('posts', 'message'));
+        return view('admin.posts.index', compact('posts'));
     }
 
     /**
@@ -41,7 +33,8 @@ class PostController extends Controller
     public function create()
     {   
         $categories = Category::all();
-        return view('admin.posts.create', compact('categories'));
+        $tags = Tag::all();
+        return view('admin.posts.create', compact('categories', 'tags'));
     }
 
     /**
@@ -67,7 +60,11 @@ class PostController extends Controller
         $post->fill($form_data);
         $post->save();
 
-        return redirect()->route('admin.posts.index');
+        if($request->has('tags')){
+            $post->tags()->attach($request->tags);
+        }
+
+        return redirect()->route('admin.posts.index')->with('message', 'Nuovo post creato correttamente');
     }
 
     /**
@@ -90,7 +87,8 @@ class PostController extends Controller
     public function edit(Post $post)
     {   
         $categories = Category::all();
-        return view('admin.posts.edit', compact('post', 'categories'));
+        $tags = Tag::all();
+        return view('admin.posts.edit', compact('post', 'categories', 'tags'));
     }
 
     /**
@@ -117,7 +115,11 @@ class PostController extends Controller
 
         $post->update($form_data);
 
-        return redirect()->route('admin.posts.index');
+        if($request->has('tags')){
+            $post->tags()->sync($request->tags);
+        }
+
+        return redirect()->route('admin.posts.index')->with('message', 'Post modificato correttamente');
     }
 
     /**
@@ -128,11 +130,14 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {   
-        if($post->cover_image){
-            Storage::delete($post->cover_image);
-        }
+        $post->tags()->sync([]);
+
+        Storage::delete($post->cover_image);
+
+        $title_post = $post->title;
+
         $post->delete();
-        $message = 'Cancellazione post completata';
-        return redirect()->route('admin.posts.index', ['message' => $message]);
+        
+        return redirect()->route('admin.posts.index')->with('message', "title_post cancellato correttamente");
     }
 }

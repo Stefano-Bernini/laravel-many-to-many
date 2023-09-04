@@ -49,7 +49,7 @@ class TagController extends Controller
      */
     public function show(Tag $tag)
     {
-        //
+        return view('admin.tags.show', compact('tag'));
     }
 
     /**
@@ -83,6 +83,10 @@ class TagController extends Controller
      */
     public function destroy(Tag $tag)
     {
-        //
+        $tag->posts()->sync([]);
+
+        $tag->delete();
+
+        return redirect()->route('admin.tags.index')->with('message', 'Tag cancellato correttamente');
     }
 }

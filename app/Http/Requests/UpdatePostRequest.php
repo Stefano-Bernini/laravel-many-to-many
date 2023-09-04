@@ -26,7 +26,8 @@ class UpdatePostRequest extends FormRequest
         return [
             'title' => 'required|max:50',
             'cover_image' => 'image|max:250',
-            'category_id' => 'required|exists:categories,id'
+            'category_id' => 'required|exists:categories,id',
+            'tag_id'      => 'exist:tags,id'
         ];
     }
 
@@ -37,7 +38,8 @@ class UpdatePostRequest extends FormRequest
             'cover_image.image' => 'Il file inviato deve avere una delle seguenti estenssioni: jpg, png, jpeg, webp',
             'cover_image.max' => 'Il nome del file deve essere lungo al massimo :max caratteri',
             'category_id.required' => 'Devi selezionare una categoria',
-            'category_id.exist'    => 'Categoria selezionata non valida'
+            'category_id.exist'    => 'Categoria selezionata non valida',
+            'tag_id.exists'        => 'Tag sselezionato non valido'
         ];
     }
 }

@@ -56,6 +56,22 @@
                         @enderror
                     </div>
                     <div class="form-group mt-4">
+                        <p>Seleziona i tag</p>
+                        @foreach ($tags as $tag)
+                            <div class="form-check @error('tags')is-invalid @enderror">
+                                @if ($errors->any())
+                                    <input type="checkbox" name="tags[]" value="{{ $tag->id }}" class="form-check-input" {{in_array($tag->id, old('tags', [])) ? 'checked' : ''}}>
+                                @else
+                                    <input type="checkbox" name="tags[]" value="{{ $tag->id }}" class="form-check-input" {{$post->tags->contains($tag) ? 'checked' : ''}}>
+                                @endif
+                                <label class="form-check-label">{{ $tag->name}}</label>
+                            </div>
+                        @endforeach
+                        @error('tags')
+                            <div class="text-denger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group mt-4">
                         <label class="control-label">Contenuto</label>
                         <textarea class="form-control" name="content" id="content" placeholder="Contenuto">{{ old('content') ?? $post->title }}</textarea>
                     </div>
