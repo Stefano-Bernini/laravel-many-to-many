@@ -39,7 +39,7 @@ class UpdatePostRequest extends FormRequest
             'cover_image.max' => 'Il nome del file deve essere lungo al massimo :max caratteri',
             'category_id.required' => 'Devi selezionare una categoria',
             'category_id.exist'    => 'Categoria selezionata non valida',
-            'tag_id.exists'        => 'Tag sselezionato non valido'
+            'tag_id.exists'        => 'Tag selezionato non valido'
         ];
     }
 }
